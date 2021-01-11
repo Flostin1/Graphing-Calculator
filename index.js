@@ -88,7 +88,7 @@ function gameLoop(timestamp) {
     if (start === undefined) {
         start = timestamp;
     }
-    let elapsed = timestamp - start;
+    //let elapsed = timestamp - start;
 
     // Content to be animated
     ctx.clearRect(0, 0, canvasRect.width, canvasRect.height);
