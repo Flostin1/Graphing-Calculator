@@ -8,7 +8,7 @@
             "type": "pwa-chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "C:\\dev\\Web Apps\\Scratchpad\\index.html",
+            "url": "C:\\dev\\Web Apps\\Graphing Calculator\\index.html",
             "webRoot": "${workspaceFolder}"
         }
     ]

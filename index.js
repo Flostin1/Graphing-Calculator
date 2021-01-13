@@ -63,23 +63,31 @@ function onMouseMove(event) {
         camera.x -= (mouse.x - pmouse.x) / camera.widthRatio;
         camera.y += (mouse.y - pmouse.y) / camera.heightRatio;
     }
-    pmouse = Object.assign({}, mouse);
+
+    pmouse.x = mouse.x;
+    pmouse.y = mouse.y;
 }
 
 function onMouseUp(event) {
     mouseIsDown = false;
 }
 
+function onMouseLeave(event) {
+    mouseIsDown = false;
+}
+
 function onMouseScroll(event) {
-    // ISSUE: Zooming needs to be logarithmic
+    // ISSUE: The screen needs to zoom towards the mouse rather than the center
 
+    let deltaZoom = Math.pow(1.1, event.deltaY / 100);
     event.preventDefault();
-    camera.width /= event.deltaY * 0.01;
-    camera.height /= event.deltaY * 0.01;
-    camera.widthRatio = width / this.width;
-    camera.heightRatio = height / this.height;
 
-    console.log(camera.width);
+    camera.width *= deltaZoom;
+    camera.height *= deltaZoom;
+    camera.widthRatio = width / camera.width;
+    camera.heightRatio = height / camera.height;
+
+    console.log(event.deltaY);
 }
 
 let start, lastTimestamp = 0;
@@ -97,7 +105,7 @@ function gameLoop(timestamp) {
     ctx.beginPath();
     ctx.lineWidth = 2;
     ctx.strokeStyle = "green";
-    
+
     let x = camera.x - camera.width / 2;
     let y = f(x);
     let coords = camera.toScreen(x, y);
@@ -121,5 +129,6 @@ function gameLoop(timestamp) {
 canvas.addEventListener("mousedown", onMouseDown);
 canvas.addEventListener("mousemove", onMouseMove);
 canvas.addEventListener("mouseup", onMouseUp);
+canvas.addEventListener("mouseleave", onMouseLeave);
 canvas.addEventListener("wheel", onMouseScroll);
 window.requestAnimationFrame(gameLoop);
