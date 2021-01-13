@@ -1,3 +1,20 @@
+/**
+ * TODO:
+ * Refactor
+ * Add axis labels (numbers)
+ * Add grid lines
+ * The screen needs to zoom towards the mouse rather than the center
+ * 
+ * ISSUES:
+ * Zooming out too far causes the graph to disappear (probably because the numbers are too big)
+ * * Most noticable with exponential functions
+ * 
+ * Because the graphing program plots points and connects them with lines, 
+ * functions with two consecutive vertical asymptotes such as 1/x or tan(x) 
+ * will be graphed with a very steep line, almost vertical line in the middle of the infinite discontinuity
+ */
+
+
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 let canvasRect = canvas.getBoundingClientRect();
@@ -77,8 +94,6 @@ function onMouseLeave(event) {
 }
 
 function onMouseScroll(event) {
-    // ISSUE: The screen needs to zoom towards the mouse rather than the center
-
     let deltaZoom = Math.pow(1.1, event.deltaY / 100);
     event.preventDefault();
 
