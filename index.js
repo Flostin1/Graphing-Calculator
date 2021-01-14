@@ -14,13 +14,14 @@
  * will be graphed with a very steep line, almost vertical line in the middle of the infinite discontinuity
  */
 
-
+const width = 800;
+const height = 800;
 let canvas = document.getElementById("canvas");
+canvas.width = width;
+canvas.height = height;
+
 let ctx = canvas.getContext("2d");
 let canvasRect = canvas.getBoundingClientRect();
-
-let width = parseInt(canvas.width);
-let height = parseInt(canvas.height);
 
 let mouseIsDown = false;
 
@@ -35,12 +36,12 @@ let camera = (function() {
 
         // Translates graphing coords to screen coords
         toScreen(x, y) {
-            return [(x - this.x) * this.widthRatio + width / 2, -(y - this.y) * this.heightRatio + height / 2];
+            return {x: (x - this.x) * this.widthRatio + width / 2, y: (-y + this.y) * this.heightRatio + height / 2};
         }
 
         // Translates screen coords to graphing coords
         toGraph(x, y) {
-            return [(x - width / 2) / this.widthRatio - this.x, (-y + height / 2) / this.heightRatio + this.y];
+            return {x: (x - width / 2) / this.widthRatio - this.x, y: (-y + height / 2) / this.heightRatio + this.y};
         }
     }
 
@@ -48,7 +49,14 @@ let camera = (function() {
 })();
 
 function f(x) {
-    return x * x;
+    return Math.log(x);
+}
+
+function drawAxisLabels() {
+    ctx.font = "12px Verdana";
+    ctx.fillStyle = "black";
+
+    
 }
 
 function drawPlane() {
@@ -58,13 +66,13 @@ function drawPlane() {
     ctx.lineWidth = 2;
     ctx.strokeStyle = "black";
 
-    ctx.moveTo(cameraPos[0], 0);
-    ctx.lineTo(cameraPos[0], height);
+    ctx.moveTo(cameraPos.x, 0);
+    ctx.lineTo(cameraPos.x, height);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(0, cameraPos[1]);
-    ctx.lineTo(width, cameraPos[1]);
+    ctx.moveTo(0, cameraPos.y);
+    ctx.lineTo(width, cameraPos.y);
     ctx.stroke();
     ctx.closePath();
 }
@@ -107,12 +115,6 @@ function onMouseScroll(event) {
 
 let start, lastTimestamp = 0;
 function gameLoop(timestamp) {
-    // Sets the start time to the first iteration of the game loop
-    if (start === undefined) {
-        start = timestamp;
-    }
-    //let elapsed = timestamp - start;
-
     // Content to be animated
     ctx.clearRect(0, 0, canvasRect.width, canvasRect.height);
     drawPlane();
@@ -124,13 +126,13 @@ function gameLoop(timestamp) {
     let x = camera.x - camera.width / 2;
     let y = f(x);
     let coords = camera.toScreen(x, y);
-    ctx.moveTo(coords[0], coords[1]);
-    x += 1 / camera.widthRatio;
+    ctx.moveTo(coords.x, coords.y);
+    x += camera.width / width;
 
-    for (; x < camera.x + camera.width / 2; x += 1 / camera.widthRatio) {
+    for (; x < camera.x + camera.width / 2; x += camera.width / width) {
         y = f(x);
         coords = camera.toScreen(x, y);
-        ctx.lineTo(coords[0], coords[1]);
+        ctx.lineTo(coords.x, coords.y);
     }
 
     ctx.stroke();
