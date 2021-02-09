@@ -60,19 +60,19 @@ function drawAxisLabels() {
 }
 
 function drawPlane() {
-    let cameraPos = camera.toScreen(0, 0);
+    let origin = camera.toScreen(0, 0);
 
     ctx.beginPath();
     ctx.lineWidth = 2;
     ctx.strokeStyle = "black";
 
-    ctx.moveTo(cameraPos.x, 0);
-    ctx.lineTo(cameraPos.x, height);
+    ctx.moveTo(origin.x, 0);
+    ctx.lineTo(origin.x, height);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(0, cameraPos.y);
-    ctx.lineTo(width, cameraPos.y);
+    ctx.moveTo(0, origin.y);
+    ctx.lineTo(width, origin.y);
     ctx.stroke();
     ctx.closePath();
 }
